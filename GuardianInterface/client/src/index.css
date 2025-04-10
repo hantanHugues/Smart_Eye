@@ -1,0 +1,130 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 7%;
+    --foreground: 0 0% 88%;
+    --card: 0 0% 12%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 12%;
+    --popover-foreground: 0 0% 88%;
+    --primary: 232 83% 31%;
+    --primary-foreground: 0 0% 98%;
+    --primary-light: 231 49% 45%;
+    --secondary: 26 100% 50%;
+    --secondary-foreground: 0 0% 98%;
+    --secondary-light: 30 100% 62%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 60%;
+    --accent: 0 0% 18%;
+    --accent-foreground: 0 0% 88%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 18%;
+    --input: 0 0% 18%;
+    --ring: 232 83% 31%;
+    --radius: 0.5rem;
+
+    /* Status colors */
+    --success: 122 39% 49%;
+    --warning: 36 100% 50%;
+    --danger: 4 90% 58%;
+    --info: 199 98% 48%;
+
+    /* Dark colors */
+    --dark: 0 0% 7%;
+    --dark-light: 0 0% 12%;
+    --dark-lighter: 0 0% 18%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+  
+  /* Custom scrollbar */
+  .scrollbar-dark::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  .scrollbar-dark::-webkit-scrollbar-track {
+    @apply bg-[#1e1e1e];
+  }
+  
+  .scrollbar-dark::-webkit-scrollbar-thumb {
+    @apply bg-primary-light rounded-md;
+  }
+  
+  .scrollbar-dark::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary;
+  }
+  
+  /* Menu items */
+  .menu-item {
+    @apply transition-all duration-200 ease-in-out;
+  }
+  
+  .menu-item:hover {
+    @apply bg-primary/10;
+  }
+  
+  .menu-item.active {
+    @apply border-l-3 border-secondary bg-primary/20;
+  }
+  
+  /* Cards */
+  .card {
+    @apply transition-all duration-300 ease-in-out;
+  }
+  
+  .card:hover {
+    @apply transform -translate-y-0.5 shadow-lg;
+  }
+  
+  /* Animations */
+  .fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  .scale-in {
+    animation: scaleIn 0.3s ease-out;
+  }
+  
+  @keyframes scaleIn {
+    from { transform: scale(0.95); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  
+  /* Live dot animation */
+  .live-dot {
+    position: relative;
+  }
+  
+  .live-dot::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 8px;
+    height: 8px;
+    @apply bg-danger rounded-full;
+    animation: pulse 2s infinite;
+  }
+  
+  @keyframes pulse {
+    0% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.2); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+}

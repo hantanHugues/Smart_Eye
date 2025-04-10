@@ -1,0 +1,118 @@
+🎯 Objectif général :
+Guardian AI est une application d’intelligence artificielle conçue pour surveiller en temps réel les flux vidéo des caméras de surveillance urbaines, détecter automatiquement des situations anormales ou dangereuses (incendie, bagarre, accident, chute, intrusion, etc.) et notifier immédiatement les services concernés via différents canaux de communication (email, WhatsApp, Telegram, SMS...).
+
+🧩 Structure générale de l'application :
+Module IA de détection & classification (backend)
+
+Système d’envoi d’alertes automatique (notificateur intelligent)
+
+Interface d’administration (frontend)
+
+Base de données de configuration & historique
+
+🔍 Fonctionnalités détaillées
+1. 📡 Surveillance & détection IA
+Analyse des flux vidéos en temps réel depuis les caméras publiques ou privées.
+
+Détection automatique d’événements anormaux ou dangereux via des modèles de deep learning (ex : YOLOv8).
+
+Classification des incidents détectés : feu, agression, accident de voiture, chute, mouvement suspect, etc.
+
+Possibilité de définir des zones sensibles pour une surveillance prioritaire.
+
+2. 🚨 Déclenchement automatique des alertes
+Envoi immédiat et sans intervention humaine d’une alerte dès qu’un danger est détecté.
+
+Canaux de communication configurables :
+
+✉️ Email
+
+📱 WhatsApp (via API)
+
+📩 Telegram (via bot)
+
+📲 SMS (via Twilio ou autre)
+
+Possibilité de joindre à l’alerte :
+
+📷 Une capture d’écran de la scène
+
+📍 La localisation de la caméra
+
+🕒 L’heure exacte de l’incident
+
+📄 Type d’incident détecté
+
+3. ⚙️ Interface d’administration (réservée aux autorités)
+a. Gestion des incidents
+Ajouter, modifier, supprimer des types d’incidents reconnus par l’IA.
+
+Visualiser les incidents récents avec :
+
+Statut (envoyé / en attente / erreur)
+
+Détail (caméra, date, heure, type, image)
+
+b. Gestion des services de secours
+Enregistrer les contacts responsables pour chaque type d’incident.
+
+Exemple : incendie → sapeurs-pompiers (email + WhatsApp)
+
+Exemple : chute → SAMU (email + SMS)
+
+Associer un ou plusieurs canaux de communication à chaque service.
+
+c. Configuration des canaux
+Activer ou désactiver :
+
+Les services de notification (email, WhatsApp, etc.)
+
+Les zones sous surveillance
+
+Les seuils de détection (sensibilité IA)
+
+d. Historique et logs
+Accès à un journal complet des alertes envoyées (ou non).
+
+Recherche filtrée par date, type, caméra, statut.
+
+Export possible (.CSV, .PDF).
+
+4. 🧠 Module de formation et amélioration IA
+Stockage des cas détectés pour entraînement futur.
+
+Possibilité pour l’administrateur de corriger une erreur de classification (amélioration continue).
+
+Option de réentrainement automatique des modèles avec les nouvelles données annotées.
+
+5. 🔐 Sécurité & confidentialité
+Accès sécurisé à l’interface via mot de passe ou double authentification.
+
+Chiffrement des données sensibles (emails, numéros, logs).
+
+Journalisation des connexions et des actions sur la plateforme.
+
+Respect des lois sur la protection des données (ex : RGPD ou équivalent local).
+
+🖥️ Technologies recommandées :
+Partie	Technologies proposées
+IA & traitement vidéo	Python, OpenCV, YOLOv8, TensorFlow/PyTorch
+Backend	Python (Flask ou FastAPI)
+Notification	SMTP, Twilio, Telegram Bot API, WhatsApp Business API
+Interface Admin	Electron.js (app bureau) ou React.js/Vue.js (web)
+Base de données	MongoDB (config & logs), Redis (temps réel)
+Communication temps réel	WebSocket, MQTT
+✅ Scénario d’utilisation typique :
+Une caméra détecte une bagarre dans une rue.
+
+Le système IA classifie l’incident comme "agression".
+
+Guardian AI consulte la base : ce type d’incident → envoyer à la police.
+
+Une alerte est automatiquement envoyée par :
+
+📧 Email à police@ville.com
+
+📱 Message WhatsApp au numéro d’urgence
+
+L’interface admin affiche la notification avec les détails (image, heure, lieu).
