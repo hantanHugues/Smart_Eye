@@ -44,7 +44,10 @@ async def create_incident(incident: Incident):
 @app.get("/incidents")
 async def get_incidents():
     try:
-        incidents = list(incidents_collection.find({}, {'_id': 0}))
+        incidents = list(incidents_collection.find({}))
+        # Convert ObjectId to string for JSON serialization
+        for incident in incidents:
+            incident['_id'] = str(incident['_id'])
         return incidents
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
