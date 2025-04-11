@@ -28,7 +28,7 @@ export default function Sidebar() {
           <ShieldIcon className="text-white text-xl" />
         </div>
         <div>
-          <h1 className="font-heading font-bold text-white text-lg">Guardian AI</h1>
+          <h1 className="font-heading font-bold text-white text-lg">Smart Eye</h1>
           <p className="text-xs text-gray-400">Système de surveillance</p>
         </div>
       </div>

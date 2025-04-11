@@ -1,8 +1,8 @@
 
-# Guardian AI - Système de Surveillance Intelligent 🛡️
+# Smart Eye - Système de Surveillance Intelligent 🛡️
 
 ## Description
-Guardian AI est une application d'intelligence artificielle conçue pour la surveillance urbaine en temps réel. Le système analyse automatiquement les flux vidéo des caméras de surveillance pour détecter des situations anormales ou dangereuses (incendies, bagarres, accidents, chutes, intrusions, etc.) et notifie immédiatement les services d'urgence concernés.
+Smart Eye est une application d'intelligence artificielle conçue pour la surveillance urbaine en temps réel. Le système analyse automatiquement les flux vidéo des caméras de surveillance pour détecter des situations anormales ou dangereuses (incendies, bagarres, accidents, chutes, intrusions, etc.) et notifie immédiatement les services d'urgence concernés.
 
 ## Fonctionnalités Principales 🔍
 

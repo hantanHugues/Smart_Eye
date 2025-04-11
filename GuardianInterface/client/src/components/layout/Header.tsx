@@ -38,7 +38,7 @@ export default function Header() {
         setTitle("Module IA");
         break;
       default:
-        setTitle("Guardian AI");
+        setTitle("Smart Eye");
     }
   }, [location]);
 
