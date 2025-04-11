@@ -193,21 +193,23 @@ export default function History() {
                 </div>
               </div>
               
+              {selectedIncident.image_data && (
+                <div className="mb-4">
+                  <p className="text-gray-400 mb-2">Image de l'incident</p>
+                  <div className="relative h-64 w-full overflow-hidden rounded-md">
+                    <img 
+                      src={`data:image/jpeg;base64,${selectedIncident.image_data}`}
+                      alt="Incident"
+                      className="object-contain w-full h-full bg-dark-darker"
+                    />
+                  </div>
+                </div>
+              )}
+              
               <div>
                 <p className="text-gray-400 mb-2">Message</p>
                 <p className="bg-dark-darker p-3 rounded-md">{selectedIncident.message}</p>
               </div>
-              
-              {selectedIncident.image_data && (
-                <div>
-                  <p className="text-gray-400 mb-2">Image</p>
-                  <img 
-                    src={`data:image/jpeg;base64,${selectedIncident.image_data}`}
-                    alt="Incident"
-                    className="w-full h-auto rounded-md"
-                  />
-                </div>
-              )}
             </div>
           )}
         </DialogContent>
