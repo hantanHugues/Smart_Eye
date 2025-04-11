@@ -3,10 +3,9 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pymongo import MongoClient
 from datetime import datetime
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
+from pydantic import BaseModel
+from typing import Optional
+import base64
 
 app = FastAPI()
 
@@ -25,10 +24,19 @@ client = MongoClient(MONGO_URI)
 db = client.Smarteye
 incidents_collection = db.incidents
 
+class Incident(BaseModel):
+    timestamp: str
+    incident_type: str
+    location: str
+    image_name: str
+    image_data: str
+    message: str
+
 @app.post("/incidents")
-async def create_incident(incident: dict):
+async def create_incident(incident: Incident):
     try:
-        result = incidents_collection.insert_one(incident)
+        incident_dict = incident.dict()
+        result = incidents_collection.insert_one(incident_dict)
         return {"id": str(result.inserted_id)}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -37,9 +45,6 @@ async def create_incident(incident: dict):
 async def get_incidents():
     try:
         incidents = list(incidents_collection.find({}, {'_id': 0}))
-        for incident in incidents:
-            if 'timestamp' in incident:
-                incident['timestamp'] = incident['timestamp'].isoformat() if isinstance(incident['timestamp'], datetime) else incident['timestamp']
         return incidents
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -51,8 +56,6 @@ async def get_incident(incident_id: str):
         incident = incidents_collection.find_one({"_id": ObjectId(incident_id)})
         if incident:
             incident['_id'] = str(incident['_id'])
-            if 'timestamp' in incident:
-                incident['timestamp'] = incident['timestamp'].isoformat() if isinstance(incident['timestamp'], datetime) else incident['timestamp']
             return incident
         raise HTTPException(status_code=404, detail="Incident not found")
     except Exception as e:
