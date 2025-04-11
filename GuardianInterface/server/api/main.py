@@ -37,7 +37,24 @@ async def create_incident(incident: dict):
 async def get_incidents():
     try:
         incidents = list(incidents_collection.find({}, {'_id': 0}))
+        for incident in incidents:
+            if 'timestamp' in incident:
+                incident['timestamp'] = incident['timestamp'].isoformat() if isinstance(incident['timestamp'], datetime) else incident['timestamp']
         return incidents
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/incidents/{incident_id}")
+async def get_incident(incident_id: str):
+    try:
+        from bson import ObjectId
+        incident = incidents_collection.find_one({"_id": ObjectId(incident_id)})
+        if incident:
+            incident['_id'] = str(incident['_id'])
+            if 'timestamp' in incident:
+                incident['timestamp'] = incident['timestamp'].isoformat() if isinstance(incident['timestamp'], datetime) else incident['timestamp']
+            return incident
+        raise HTTPException(status_code=404, detail="Incident not found")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

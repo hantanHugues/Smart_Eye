@@ -1,33 +1,41 @@
+
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { 
   RefreshIcon, CalendarIcon, FilterIcon, 
-  FileDownloadIcon, SearchIcon
+  FileDownloadIcon, SearchIcon, EyeIcon
 } from "@/lib/icons";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale";
+
+interface Incident {
+  _id: string;
+  timestamp: string;
+  incident_type: string;
+  location: string;
+  image_name: string;
+  image_data: string;
+  message: string;
+}
 
 export default function History() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedIncident, setSelectedIncident] = useState<Incident | null>(null);
   
-  // Mock data - would come from API in real implementation
-  const historyData = [
-    { id: 1, type: "Incendie", location: "Place Principale", date: "2023-05-15 14:32", status: "Résolu", response: "Rapide" },
-    { id: 2, type: "Bagarre", location: "Entrée Est", date: "2023-05-14 22:17", status: "Résolu", response: "Normal" },
-    { id: 3, type: "Accident", location: "Parking Nord", date: "2023-05-13 16:45", status: "Résolu", response: "Rapide" },
-    { id: 4, type: "Intrusion", location: "Zone Sécurisée", date: "2023-05-12 03:22", status: "Résolu", response: "Lent" },
-    { id: 5, type: "Incendie", location: "Bâtiment B", date: "2023-05-10 09:58", status: "Résolu", response: "Rapide" },
-    { id: 6, type: "Chute", location: "Escalier Central", date: "2023-05-08 13:05", status: "Résolu", response: "Normal" },
-    { id: 7, type: "Bagarre", location: "Place Centrale", date: "2023-05-07 23:47", status: "Résolu", response: "Rapide" },
-    { id: 8, type: "Intrusion", location: "Local Technique", date: "2023-05-05 04:33", status: "Résolu", response: "Normal" },
-  ];
+  const { data: incidents = [], isLoading, refetch } = useQuery<Incident[]>({
+    queryKey: ['/api/incidents'],
+  });
   
   // Filter data based on search term and dates
-  const filteredData = historyData.filter(item => {
+  const filteredData = incidents.filter(item => {
     const matchesSearch = searchTerm === "" || 
-      item.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.incident_type.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.location.toLowerCase().includes(searchTerm.toLowerCase());
     
-    const itemDate = new Date(item.date);
+    const itemDate = new Date(item.timestamp);
     const start = startDate ? new Date(startDate) : null;
     const end = endDate ? new Date(endDate) : null;
     
@@ -37,26 +45,15 @@ export default function History() {
     return matchesSearch && isAfterStart && isBeforeEnd;
   });
   
-  // Get the appropriate color for response time
-  const getResponseColor = (response: string) => {
-    switch (response) {
-      case "Rapide":
-        return "text-success";
-      case "Normal":
-        return "text-info";
-      case "Lent":
-        return "text-warning";
-      default:
-        return "text-gray-400";
-    }
-  };
-  
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-heading font-bold text-white">Historique des incidents</h1>
         <div className="flex space-x-2">
-          <button className="bg-dark-light px-3 py-2 rounded-md text-sm flex items-center hover:bg-dark-lighter transition-colors">
+          <button 
+            onClick={() => refetch()}
+            className="bg-dark-light px-3 py-2 rounded-md text-sm flex items-center hover:bg-dark-lighter transition-colors"
+          >
             <RefreshIcon className="mr-2" />
             <span>Actualiser</span>
           </button>
@@ -120,44 +117,38 @@ export default function History() {
       
       {/* History Table */}
       <div className="bg-dark-light rounded-lg shadow-lg overflow-hidden">
-        <div className="p-4 border-b border-dark-lighter">
-          <h3 className="font-heading font-semibold text-white">Incidents résolus</h3>
-        </div>
-        
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="bg-dark-darker text-gray-400 text-xs uppercase">
-                <th className="py-3 px-4 text-left">ID</th>
                 <th className="py-3 px-4 text-left">Type</th>
-                <th className="py-3 px-4 text-left">Emplacement</th>
-                <th className="py-3 px-4 text-left">Date</th>
-                <th className="py-3 px-4 text-center">Statut</th>
-                <th className="py-3 px-4 text-center">Temps de réponse</th>
+                <th className="py-3 px-4 text-left">Date et heure</th>
+                <th className="py-3 px-4 text-left">Localisation</th>
                 <th className="py-3 px-4 text-center">Actions</th>
               </tr>
             </thead>
             <tbody className="text-sm">
-              {filteredData.length > 0 ? (
-                filteredData.map((item) => (
-                  <tr key={item.id} className="border-b border-dark-darker hover:bg-dark-lighter transition-colors">
-                    <td className="py-3 px-4 text-white">{item.id}</td>
-                    <td className="py-3 px-4 text-white">{item.type}</td>
-                    <td className="py-3 px-4 text-gray-300">{item.location}</td>
-                    <td className="py-3 px-4 text-gray-300">{item.date}</td>
-                    <td className="py-3 px-4 text-center">
-                      <span className="bg-success/20 text-success px-2 py-0.5 rounded-full text-xs">
-                        {item.status}
-                      </span>
+              {isLoading ? (
+                <tr>
+                  <td colSpan={4} className="py-8 text-center text-gray-400">
+                    Chargement des incidents...
+                  </td>
+                </tr>
+              ) : filteredData.length > 0 ? (
+                filteredData.map((incident) => (
+                  <tr key={incident._id} className="border-b border-dark-darker hover:bg-dark-lighter transition-colors">
+                    <td className="py-3 px-4 text-white">{incident.incident_type}</td>
+                    <td className="py-3 px-4 text-gray-300">
+                      {format(new Date(incident.timestamp), "dd/MM/yyyy HH:mm", { locale: fr })}
                     </td>
-                    <td className="py-3 px-4 text-center">
-                      <span className={`${getResponseColor(item.response)}`}>
-                        {item.response}
-                      </span>
-                    </td>
+                    <td className="py-3 px-4 text-gray-300">{incident.location}</td>
                     <td className="py-3 px-4">
                       <div className="flex justify-center">
-                        <button className="bg-primary-light hover:bg-primary text-white px-2 py-1 rounded text-xs">
+                        <button 
+                          onClick={() => setSelectedIncident(incident)}
+                          className="bg-primary/20 hover:bg-primary/30 text-primary px-2 py-1 rounded flex items-center"
+                        >
+                          <EyeIcon className="w-4 h-4 mr-1" />
                           Détails
                         </button>
                       </div>
@@ -166,33 +157,61 @@ export default function History() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={7} className="py-6 text-center text-gray-400">
-                    Aucun résultat ne correspond à vos critères de recherche.
+                  <td colSpan={4} className="py-8 text-center text-gray-400">
+                    Aucun incident trouvé.
                   </td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
-        
-        <div className="p-4 border-t border-dark-lighter flex justify-between items-center">
-          <p className="text-sm text-gray-400">Affichage de {filteredData.length} incidents</p>
-          <div className="flex space-x-1">
-            <button className="bg-dark-darker text-gray-300 hover:text-white px-3 py-1 rounded text-sm">
-              Précédent
-            </button>
-            <button className="bg-primary text-white px-3 py-1 rounded text-sm">
-              1
-            </button>
-            <button className="bg-dark-darker text-gray-300 hover:text-white px-3 py-1 rounded text-sm">
-              2
-            </button>
-            <button className="bg-dark-darker text-gray-300 hover:text-white px-3 py-1 rounded text-sm">
-              Suivant
-            </button>
-          </div>
-        </div>
       </div>
+
+      {/* Incident Details Dialog */}
+      <Dialog open={!!selectedIncident} onOpenChange={() => setSelectedIncident(null)}>
+        <DialogContent className="bg-dark-light text-white border-dark-lighter">
+          <DialogHeader>
+            <DialogTitle>Détails de l'incident</DialogTitle>
+          </DialogHeader>
+          
+          {selectedIncident && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-gray-400">Type</p>
+                  <p className="font-medium">{selectedIncident.incident_type}</p>
+                </div>
+                <div>
+                  <p className="text-gray-400">Date et heure</p>
+                  <p className="font-medium">
+                    {format(new Date(selectedIncident.timestamp), "dd/MM/yyyy HH:mm", { locale: fr })}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-gray-400">Localisation</p>
+                  <p className="font-medium">{selectedIncident.location}</p>
+                </div>
+              </div>
+              
+              <div>
+                <p className="text-gray-400 mb-2">Message</p>
+                <p className="bg-dark-darker p-3 rounded-md">{selectedIncident.message}</p>
+              </div>
+              
+              {selectedIncident.image_data && (
+                <div>
+                  <p className="text-gray-400 mb-2">Image</p>
+                  <img 
+                    src={`data:image/jpeg;base64,${selectedIncident.image_data}`}
+                    alt="Incident"
+                    className="w-full h-auto rounded-md"
+                  />
+                </div>
+              )}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
