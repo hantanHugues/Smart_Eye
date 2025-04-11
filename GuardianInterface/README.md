@@ -2,110 +2,170 @@
 # Smart Eye - Système de Surveillance Intelligent 🛡️
 
 ## Description
-Smart Eye est une application d'intelligence artificielle conçue pour la surveillance urbaine en temps réel. Le système analyse automatiquement les flux vidéo des caméras de surveillance pour détecter des situations anormales ou dangereuses (incendies, bagarres, accidents, chutes, intrusions, etc.) et notifie immédiatement les services d'urgence concernés.
+Smart Eye est une solution de surveillance intelligente qui utilise l'intelligence artificielle pour analyser en temps réel les flux vidéo. Le système détecte automatiquement les situations anormales ou dangereuses et alerte instantanément les services d'urgence appropriés.
 
-## Fonctionnalités Principales 🔍
+## Table des matières
+- [Fonctionnalités](#fonctionnalités)
+- [Technologies](#technologies)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Architecture](#architecture)
+- [API](#api)
+- [Sécurité](#sécurité)
 
-### 1. Surveillance et Détection IA
-- Analyse en temps réel des flux vidéo
-- Détection automatique d'événements anormaux via YOLOv8
-- Classification intelligente des incidents
+## Fonctionnalités
+
+### 1. Analyse Vidéo en Temps Réel
+- Détection d'incidents via YOLOv8
+- Classification automatique des événements
+- Traitement parallèle des flux
 - Définition de zones prioritaires
 
 ### 2. Gestion des Alertes
-- Notification instantanée multi-canaux :
+- Notifications multicanaux :
   - Email
   - WhatsApp
   - Telegram
   - SMS
-- Informations détaillées :
+- Données incluses :
   - Captures d'écran
-  - Localisation GPS
+  - Coordonnées GPS
   - Horodatage
-  - Classification de l'incident
+  - Type d'incident
 
 ### 3. Interface d'Administration
-- Dashboard temps réel
-- Gestion des incidents
+- Tableau de bord en temps réel
+- Gestion centralisée des incidents
 - Configuration des services d'urgence
 - Monitoring système
-- Paramétrage de l'IA
+- Paramétrage des modèles IA
 
-## Architecture Technique 🔧
+## Technologies
 
 ### Frontend
-- React.js avec TypeScript
-- TailwindCSS pour le styling
-- Composants UI Radix/Shadcn
-- React Query pour la gestion d'état
-- Leaflet pour la cartographie
+- React.js + TypeScript
+- TailwindCSS
+- Radix UI / Shadcn
+- React Query
+- Leaflet (cartographie)
 
 ### Backend
-- Node.js avec Express
-- TypeScript
-- WebSocket pour les communications temps réel
-- Drizzle ORM pour la gestion de base de données
+- FastAPI (API Python)
+- MongoDB
+- WebSocket
+- Node.js + Express
 
-## Installation et Démarrage 🚀
+## Installation
 
-1. Installation des dépendances :
+1. Cloner le projet :
 ```bash
+git clone [url-du-projet]
+```
+
+2. Installer les dépendances frontend :
+```bash
+cd GuardianInterface
 npm install
 ```
 
-2. Démarrage en développement :
+3. Installer les dépendances backend :
+```bash
+cd server/api
+pip install -r requirements.txt
+```
+
+4. Démarrer le projet :
 ```bash
 npm run dev
 ```
 
-3. Build pour production :
-```bash
-npm run build
+## Configuration
+
+### Variables d'Environnement
+```env
+MONGODB_URI=votre_uri_mongodb
+API_KEY=votre_clé_api
+PORT=5000
 ```
 
-4. Démarrage en production :
-```bash
-npm start
-```
+### Services de Notification
+1. Email : Configuration SMTP
+2. WhatsApp : Clé API WhatsApp Business
+3. Telegram : Token Bot Telegram
+4. SMS : Identifiants du service SMS
 
-## Structure du Projet 📁
+## Architecture
 
+### Structure du Projet
 ```
 GuardianInterface/
 ├── client/           # Frontend React
 │   ├── src/
-│   │   ├── components/  # Composants réutilisables
-│   │   ├── pages/      # Pages de l'application
-│   │   ├── lib/        # Utilitaires et configurations
-│   │   └── hooks/      # Hooks React personnalisés
-├── server/           # Backend Express
-│   ├── routes/      # Routes API
+│   │   ├── components/  # Composants UI
+│   │   ├── pages/      # Pages
+│   │   ├── lib/        # Utilitaires
+│   │   └── hooks/      # Hooks React
+├── server/           # Backend
+│   ├── api/         # API FastAPI
 │   └── services/    # Services métier
-└── shared/          # Code partagé front/back
+└── shared/          # Code partagé
 ```
 
-## Modules Principaux 📊
+### Modules Principaux
 
-1. **Module IA**
-   - Formation et amélioration continue
-   - Configuration des paramètres de détection
-   - Gestion des modèles
+#### Module IA
+- Détection d'objets et de situations
+- Classification des incidents
+- Apprentissage continu
 
-2. **Module Services d'Urgence**
-   - Gestion des contacts
-   - Configuration des canaux de communication
-   - Zones d'intervention
+#### Module Services d'Urgence
+- Gestion des contacts
+- Routage des alertes
+- Zones d'intervention
 
-3. **Module Configuration**
-   - Paramètres système
-   - Gestion des caméras
-   - Seuils de détection
+#### Module Configuration
+- Paramètres système
+- Gestion des caméras
+- Seuils de détection
 
-## Sécurité 🔒
-- Authentification sécurisée
+## API
+
+### Points d'Entrée Principaux
+
+```typescript
+// Incidents
+GET    /api/incidents      // Liste des incidents
+POST   /api/incidents      // Créer un incident
+GET    /api/incidents/:id  // Détails d'un incident
+
+// Caméras
+GET    /api/cameras        // Liste des caméras
+POST   /api/cameras        // Ajouter une caméra
+PUT    /api/cameras/:id    // Mettre à jour une caméra
+
+// Services d'urgence
+GET    /api/services       // Liste des services
+POST   /api/services       // Ajouter un service
+```
+
+## Sécurité
+
+### Authentification
+- JWT pour l'authentification API
+- Sessions sécurisées pour l'interface admin
+- Droits d'accès par rôle
+
+### Protection des Données
 - Chiffrement des données sensibles
-- Journalisation des actions
 - Conformité RGPD
+- Journalisation des accès
 
-## Support Technique 💬
-Pour toute question ou assistance, contactez l'équipe Guardian AI via le système de tickets intégré.
+## Support et Contact
+
+Pour toute assistance technique :
+- Email : support@smarteye.com
+- Documentation API : /api/docs
+- Base de connaissances : /docs
+
+## Licence
+Smart Eye est sous licence propriétaire. Tous droits réservés.
