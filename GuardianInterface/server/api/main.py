@@ -19,11 +19,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# MongoDB connection (à remplacer avec vos informations)
-MONGO_URI = os.getenv("MONGO_URI", "votre_uri_mongodb")
+# MongoDB connection
+MONGO_URI = "mongodb+srv://ashlanvonnewgat:P3awqacwWZbCyPHx@cluster0.lxa4x2g.mongodb.net/Smarteye?retryWrites=true&w=majority&appName=Cluster0"
 client = MongoClient(MONGO_URI)
-db = client.guardian_ai  # nom de votre base de données
-incidents_collection = db.incidents  # nom de votre collection
+db = client.Smarteye
+incidents_collection = db.incidents
 
 @app.post("/incidents")
 async def create_incident(incident: dict):
